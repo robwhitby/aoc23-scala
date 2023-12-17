@@ -1,6 +1,6 @@
 import scala.annotation.tailrec
 
-object day8 {
+object day08 {
   case class Data(commands: String, network: Map[String, (String, String)]) {
     def next(from: String, dir: Char): String =
       if (dir == 'L') this.network(from)._1 else this.network(from)._2

@@ -1,6 +1,6 @@
 import scala.annotation.tailrec
 
-object day9 {
+object day09 {
 
   @tailrec
   def rec(row: Array[Int], acc: Int = 0): Int = {

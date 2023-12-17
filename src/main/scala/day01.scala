@@ -1,4 +1,4 @@
-object day1 {
+object day01 {
 
   def part1(input: List[String]): Int =
     input.map{line => (line.find(_.isDigit).mkString + line.findLast(_.isDigit).mkString).toInt}.sum

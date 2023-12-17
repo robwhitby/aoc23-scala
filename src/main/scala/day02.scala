@@ -1,4 +1,4 @@
-object day2 {
+object day02 {
   def part1(input: List[String], rmax: Int, gmax: Int, bmax: Int): Int = {
     val games = input.map(Game.from).filter{ game =>
       game.r <= rmax && game.g <= gmax && game.b <= bmax

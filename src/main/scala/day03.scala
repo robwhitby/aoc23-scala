@@ -1,4 +1,4 @@
-object day3 {
+object day03 {
   case class Num(line: Int, start: Int, value: Int)
 
   def getAllNums(lines: List[String]) = lines.zipWithIndex.flatMap { (line, lineIdx) =>

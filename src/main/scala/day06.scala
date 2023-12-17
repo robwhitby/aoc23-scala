@@ -1,4 +1,4 @@
-object day6 {
+object day06 {
 
   case class Race(time: Long, record: Long) {
     def distance(delay: Long) = delay * (time-delay)

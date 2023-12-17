@@ -1,4 +1,4 @@
-object day7 {
+object day07 {
 
   case class Hand(cards: String, bid: Int, original: String) extends Ordered[Hand] {
     def typ: Int = {

@@ -1,6 +1,6 @@
 import scala.annotation.tailrec
 
-object day4 {
+object day04 {
 
   def part1(input: List[String]): Int = {
     input.map { line =>

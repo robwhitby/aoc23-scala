@@ -1,7 +1,7 @@
 import scala.collection.immutable.NumericRange
 import scala.collection.parallel.CollectionConverters._
 
-object day5 {
+object day05 {
 
   case class Offset(source: NumericRange[Long], offset: Long)
 
