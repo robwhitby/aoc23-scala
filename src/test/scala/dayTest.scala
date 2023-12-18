@@ -9,54 +9,54 @@ class dayTest extends AnyFunSuite {
   private def open(f: String) = Source.fromURL(getClass.getResource(f)).getLines.toList
 
   test("1.1") {
-    assert(day01.part1(open("/day01ex.txt")) == 142)
-    println(day01.part1(open("/day01.txt")))
+    assert(day01.part1(open("day01ex.txt")) == 142)
+    println(day01.part1(open("day01.txt")))
   }
 
   test("1.2") {
-    assert(day01.part2(open("/day01ex2.txt")) == 281)
+    assert(day01.part2(open("day01ex2.txt")) == 281)
     assert(day01.part2(List("eightwo")) == 82)
-    println(day01.part2(open("/day01.txt")))
+    println(day01.part2(open("day01.txt")))
   }
 
   test("2.1") {
-    assert(day02.part1(open("/day02ex.txt"), 12, 13, 14) == 8)
-    println(day02.part1(open("/day02.txt"), 12, 13, 14))
+    assert(day02.part1(open("day02ex.txt"), 12, 13, 14) == 8)
+    println(day02.part1(open("day02.txt"), 12, 13, 14))
   }
 
   test("2.2") {
-    assert(day02.part2(open("/day02ex.txt")) == 2286)
-    println(day02.part2(open("/day02.txt")))
+    assert(day02.part2(open("day02ex.txt")) == 2286)
+    println(day02.part2(open("day02.txt")))
   }
 
   test("3.1") {
-    assert(day03.part1(open("/day03ex.txt")) == 4361)
-    println(day03.part1(open("/day03.txt")))
+    assert(day03.part1(open("day03ex.txt")) == 4361)
+    println(day03.part1(open("day03.txt")))
   }
 
   test("3.2") {
-    assert(day03.part2(open("/day03ex.txt")) == 467835)
-    println(day03.part2(open("/day03.txt")))
+    assert(day03.part2(open("day03ex.txt")) == 467835)
+    println(day03.part2(open("day03.txt")))
   }
 
   test("4.1") {
-    assert(day04.part1(open("/day04ex.txt")) == 13)
-    println(day04.part1(open("/day04.txt")))
+    assert(day04.part1(open("day04ex.txt")) == 13)
+    println(day04.part1(open("day04.txt")))
   }
 
   test("4.2") {
-    assert(day04.part2(open("/day04ex.txt")) == 30)
-    println(day04.part2(open("/day04.txt")))
+    assert(day04.part2(open("day04ex.txt")) == 30)
+    println(day04.part2(open("day04.txt")))
   }
 
   test("5.1") {
-    assert(day05.part1(open("/day05ex.txt")) == 35)
-    println(day05.part1(open("/day05.txt")))
+    assert(day05.part1(open("day05ex.txt")) == 35)
+    println(day05.part1(open("day05.txt")))
   }
 
   test("5.2") {
-    assert(day05.part2(open("/day05ex.txt")) == 46)
-    println(day05.part2(open("/day05.txt")))
+    assert(day05.part2(open("day05ex.txt")) == 46)
+    println(day05.part2(open("day05.txt")))
   }
 
   test("6.1") {
@@ -164,6 +164,26 @@ class dayTest extends AnyFunSuite {
 
   test("13.2") {
     assert(day13.part2(open("day13ex.txt")) == 400)
-    println(day13.part2(open("day13.txt"))) 
+    println(day13.part2(open("day13.txt")))
+  }
+
+  test("14") {
+    import day14.Grid
+    val ex = open("day14ex.txt")
+    assert(List("..O..#O..O").tilt == List("....O#..OO"))
+    assert(List("#.#..O#.##").tilt == List("#.#..O#.##"))
+    assert(ex.rotate90.rotate90.rotate90.rotate90 == ex)
+    assert(ex.tiltNorth == open("day14ex-north.txt"))
+    assert(ex.cycle == open("day14ex-cycle.txt"))
+  }
+
+  test("14.1") {
+    assert(day14.part1(open("day14ex.txt")) == 136)
+    println(day14.part1(open("day14.txt")))
+  }
+
+  test("14.2") {
+    assert(day14.part2(open("day14ex.txt")) == 64)
+    println(day14.part2(open("day14.txt")))
   }
 }
