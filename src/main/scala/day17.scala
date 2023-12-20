@@ -14,13 +14,16 @@ object day17 {
       def move(nextDir: Point) = {
         val nextPoint = Point(point.x + nextDir.x, point.y + nextDir.y)
         val nextStraight = if (nextDir == dir) straight+1 else 1
-        if (nextStraight < 4 && grid.inBounds(nextPoint)) {
+
+        if (!grid.inBounds(nextPoint)) None
+        else if ((nextDir == dir && nextStraight <= grid.maxStraight) ||
+            (nextDir != dir && straight >= grid.minStraight))  {
           Some(Position(nextPoint, nextDir, heat + grid.heatAt(nextPoint), nextStraight))
         }
         else None
       }
 
-      if (point == grid.end) Seq.empty
+      if (point == grid.end && straight >= grid.minStraight && straight <= grid.maxStraight) Seq.empty
       else {
         val ps = dir match {
           case North | South => Seq(move(East), move(West))
@@ -33,7 +36,7 @@ object day17 {
     def withoutHeat: Position = this.copy(heat = 0)
   }
 
-  case class Grid(grid: List[String]) {
+  case class Grid(grid: List[String], minStraight: Int = 1, maxStraight: Int = 3) {
     def inBounds(p: Point): Boolean = grid.head.indices.contains(p.x) && grid.indices.contains(p.y)
 
     val end: Point = Point(grid.head.length - 1, grid.length - 1)
@@ -42,10 +45,12 @@ object day17 {
 
     @tailrec
     final def walk(p: Set[Position], visited: Map[Position, Int] = Map.empty): Option[Int] = {
-      if (p.isEmpty) visited.filter(_._1.point == end).values.minOption
+      if (p.isEmpty) {
+        visited.filter((k,_) => k.point == end && k.straight >= minStraight).values.minOption
+      }
       else {
-        val keys = (1 to p.head.straight).map(s => p.head.withoutHeat.copy(straight = s))
-        if (keys.flatMap(visited.get).minOption.exists(_ <= p.head.heat)) {
+        val stopKeys = (1 to p.head.straight).map(s => p.head.withoutHeat.copy(straight = s))
+        if (stopKeys.flatMap(visited.get).minOption.exists(_ <= p.head.heat)) {
           walk(p.tail, visited)
         }
         else {
@@ -58,6 +63,12 @@ object day17 {
 
   def part1(input: List[String]): Int = {
     Grid(input)
+      .walk(Set(Position(Point(0, 0), East), Position(Point(0, 0), South)))
+      .get
+  }
+
+  def part2(input: List[String]): Int = {
+    Grid(input, 4, 10)
       .walk(Set(Position(Point(0, 0), East), Position(Point(0, 0), South)))
       .get
   }
