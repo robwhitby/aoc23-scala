@@ -15,30 +15,26 @@ object day18 {
     }
   }
 
-  case class Grid(squares: Map[Point, String]) {
-    val (xmin, xmax) = (squares.map(_._1.x).min, squares.map(_._1.x).max)
-    val (ymin, ymax) = (squares.map(_._1.y).min, squares.map(_._1.y).max)
+  case class Grid(squares: Set[Point]) {
+    val (xmin, xmax) = (squares.map(_.x).min, squares.map(_.x).max)
+    val (ymin, ymax) = (squares.map(_.y).min, squares.map(_.y).max)
 
-    override def toString: String =
-      (ymin to ymax).map { y =>
-        (xmin to xmax).map(x => squares.getOrElse(Point(x, y), " ").head).mkString
-      }.mkString("\n")
-
-    def contains(p: Point): Boolean =
+    def inBounds(p: Point): Boolean =
       p.x >= xmin && p.x <= xmax && p.y >= ymin && p.y <= ymax
 
     def neighbours(p: Point): Set[Point] =
-      Set(p.add(Point(0,1)), p.add(Point(0,-1)), p.add(Point(1,0)), p.add(Point(-1,0))).filter(contains)
+      Set(p.add(Point(0, 1)), p.add(Point(0, -1)), p.add(Point(1, 0)), p.add(Point(-1, 0)))
+        .filter(inBounds)
 
     def fill(): Grid = {
       @tailrec
-      def rec(points: Set[Point] = Set(pointInside()), updated: Map[Point, String] = Map.empty): Map[Point, String] = {
+      def rec(points: Set[Point] = Set(pointInside()), updated: Set[Point] = Set.empty): Set[Point] = {
         if (points.isEmpty) updated
         else {
           val toCheck = points.tail ++ neighbours(points.head).filter { p =>
             !squares.contains(p) && !updated.contains(p)
           }
-          rec(toCheck, updated + (points.head -> "x"))
+          rec(toCheck, updated + points.head)
         }
       }
       Grid(squares ++ rec())
@@ -46,7 +42,6 @@ object day18 {
 
     def pointInside(): Point = {
       squares
-        .keys
         .groupBy(_.y)
         .filter((_,ps) => ps.size == 2)
         .filter((_,ps) => ps.map(_.x).max - ps.map(_.x).min > 1)
@@ -57,15 +52,15 @@ object day18 {
 
   object Grid {
     def fromSteps(steps: List[Step]): Grid = {
-      val ps = steps.foldLeft(List((Point(0,0), "#"))){ (ps, step) =>
+      val ps = steps.foldLeft(List(Point(0,0))){ (ps, step) =>
         (1 to step.distance).foldLeft(ps) { (ps, _) =>
-          ps :+ (ps.last._1.add(step.dir), step.colour)
+          ps :+ ps.last.add(step.dir)
         }
       }
-      Grid(ps.toMap)
+      Grid(ps.toSet)
     }
   }
-  
+
   case class Step(dir: Point, distance: Int, colour: String)
 
   object Step {
@@ -76,7 +71,7 @@ object day18 {
       }
     }
   }
-  
+
   def part1(input: List[String]): Int = {
     val steps = Step.listFrom(input)
     val grid = Grid.fromSteps(steps)
