@@ -19,4 +19,9 @@ object day21 {
     val (grid, start) = parseInput(input)
     (1 to steps).foldLeft(Set(start))((ps,_) => ps.flatMap(_.neighbours(grid))).size
   }
+
+  def part2(input: List[String], steps: Int): Long = {
+    val (grid, start) = parseInput(input)
+    -1
+  }
 }
