@@ -4,12 +4,34 @@ object day19 {
 
   type Workflows = Map[String, Seq[Rule]]
 
+  type Ranges = Map[Char, Range]
+
+  def combineRanges(a: Ranges, b: Ranges): Ranges = {
+    def get(r: Ranges, key: Char): Range = r.getOrElse(key, (1 to 4000))
+    "xmas".map(c =>
+      c -> (get(a,c).start max get(b,c).start to (get(a,c).end min get(b,c).end))
+    ).toMap
+  }
+
+
   case class Rule(cat: Char, op: Char, value: Int, dest: String) {
     def run(part: Part): Boolean = (cat, op) match {
       case (' ', _) => true
       case (c, '>') if part(c) > value => true
       case (c, '<') if part(c) < value => true
       case _ => false
+    }
+
+    def ranges(): Ranges = op match {
+      case '>' => Map(cat -> Range(value + 1, 4000))
+      case '<' => Map(cat -> Range(1, value - 1))
+      case _ => Map(cat -> Range(0,0))
+    }
+
+    def negativeRanges(): Ranges = op match {
+      case '<' => Map(cat -> Range(value, 4000))
+      case '>' => Map(cat -> Range(1, value))
+      case _ => Map(cat -> Range(0,0))
     }
   }
 
@@ -52,5 +74,25 @@ object day19 {
       .map(p => p.values.sum)
       .sum
   }
-  
+
+  def part2(input: List[String]): BigInt = {
+    val workflows = parseWorkflows(input)
+
+    def rec(rules: Seq[Rule], ranges: Ranges = Map.empty): Set[Ranges] = {
+      val r = rules.head
+      if (r.cat == ' ') {
+        r.dest match {
+          case "A" => Set(ranges)
+          case "R" => Set.empty
+          case s: String => rec(workflows(s), ranges)
+        }
+      } else {
+        rec(workflows.getOrElse(r.dest, Seq(Rule(' ',' ',0,r.dest))), combineRanges(ranges, r.ranges())) ++
+          rec(rules.tail, combineRanges(ranges, r.negativeRanges()))
+      }
+    }
+
+    val ranges = rec(workflows("in"))
+    ranges.map{_.values.map(v => BigInt(v.length)).product}.sum
+  }
 }

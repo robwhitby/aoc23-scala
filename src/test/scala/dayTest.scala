@@ -233,4 +233,9 @@ class dayTest extends AnyFunSuite {
     assert(day19.part1(open("day19ex.txt")) == 19114)
     println(day19.part1(open("day19.txt")))
   }
+
+  test("19.2") {
+    assert(day19.part2(open("day19ex.txt")) == BigInt(167409079868000L))
+    println(day19.part2(open("day19.txt")))
+  }
 }
