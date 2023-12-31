@@ -81,9 +81,35 @@ object day20 {
     val startConfig = parseInput(input)
     val startPulse = Seq(Pulse("button", Low, "broadcaster"))
 
-    val (_, low, high) = (1 to 1000).foldLeft((startConfig, 0L,0L)){
+    val (_, low, high) = (1 to 1000).foldLeft((startConfig, 0L, 0L)){
       case ((config,lo,hi), _) => rec(config, startPulse, lo, hi)
     }
     low * high
+  }
+
+  def part2(input: List[String]): Long = {
+    val startConfig = parseInput(input)
+    val startPulse = Seq(Pulse("button", Low, "broadcaster"))
+
+    //rx has one input and all it's inputs need to be sent low
+    val rxInput = startConfig.values.find(_.targets.contains("rx")).map(_.name).get
+    val inputs = startConfig.values.filter(_.targets.contains(rxInput)).map(_.name).toSet
+
+    @tailrec
+    def rec(config: Config, pulses: Seq[Pulse], inputCounts: Map[String,Long] = Map.empty, count: Long = 1): Long = {
+      if (inputCounts.size == inputs.size) inputCounts.values.product
+      else if (pulses.isEmpty) rec(config, startPulse, inputCounts, count+1)
+      else {
+        val pulse = pulses.head
+        val newInputCounts = if (inputs.contains(pulse.target) && pulse.pulseType == Low) {
+          inputCounts.updated(pulses.head.target, count)
+        } else inputCounts
+        config.get(pulse.target).map(_.process(pulse)) match {
+          case None => rec(config, pulses.tail, newInputCounts, count)
+          case Some(m) => rec(config.updated(pulse.target, m), pulses.tail ++ m.pulses, newInputCounts, count)
+        }
+      }
+    }
+    rec(startConfig, startPulse)
   }
 }
