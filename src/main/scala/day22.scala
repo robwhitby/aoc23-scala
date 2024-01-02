@@ -1,5 +1,4 @@
 import scala.annotation.tailrec
-import scala.collection.parallel.CollectionConverters._
 
 object day22 {
 
@@ -12,22 +11,19 @@ object day22 {
   }
 
   case class Stack(bricks: Set[Brick] = Set.empty) {
-    def spaceFor(points: Set[Point]): Boolean = !bricks.exists(b => b.points.exists(points.contains))
-
-    def moveBrick(brick: Brick): (Stack, Boolean) = {
-      if (brick.a.z == 1) return (this, false)
-
-      val moved = brick.downOne()
-      val diff = moved.points diff brick.points
-      if (spaceFor(diff)) (Stack(bricks - brick + moved), true)
-      else (this, false)
+    def canMove(from: Brick, to: Brick): Boolean = {
+      if (to.a.z < 1) return false
+      val diff = to.points diff from.points
+      !bricks.exists(_.points.exists(diff.contains))
     }
 
     def fall(): Stack = {
       @tailrec
       def fallBrick(stack: Stack, brick: Brick): Stack = {
-        val (newStack, changed) = stack.moveBrick(brick)
-        if (changed) fallBrick(newStack, brick.downOne())
+        val to = brick.downOne()
+        if (stack.canMove(brick, to)) {
+          fallBrick(Stack(stack.bricks - brick + to), to)
+        }
         else stack
       }
 
@@ -37,7 +33,7 @@ object day22 {
         .foldLeft(Stack()){ (s,b) => fallBrick(Stack(s.bricks + b), b) }
     }
 
-    def wouldFall: Boolean = bricks.exists(moveBrick(_)._2)
+    def wouldFall(bs: Set[Brick]): Boolean = bs.exists(b => canMove(b, b.downOne()))
   }
 
   def parseInput(input: List[String]): Stack = {
@@ -51,12 +47,15 @@ object day22 {
 
   def part1(input: List[String]): Long = {
     val stack = parseInput(input).fall()
-    stack.bricks.par.count{ b =>
-      !Stack(stack.bricks - b).wouldFall
+
+    stack.bricks.count{ b =>
+      val above = stack.bricks.filter(_.a.z == b.b.z + 1)
+      !Stack(stack.bricks - b).wouldFall(above)
     }
   }
 
   def part2(input: List[String]): Long = {
     ???
   }
+
 }
