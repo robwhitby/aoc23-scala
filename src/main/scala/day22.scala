@@ -1,4 +1,5 @@
 import scala.annotation.tailrec
+import scala.collection.parallel.CollectionConverters._
 
 object day22 {
 
@@ -11,9 +12,7 @@ object day22 {
   }
 
   case class Stack(bricks: Set[Brick]) {
-    lazy val points: Set[Point] = bricks.flatMap(_.points)
-
-    def spaceFor(brick: Brick): Boolean = !brick.points.exists(points.contains)
+    def spaceFor(brick: Brick): Boolean = !bricks.exists(b => b.points.exists(brick.points.contains))
 
     def moveBrick(brick: Brick): (Stack, Boolean) = {
       if (brick.a.z == 1) return (this, false)
@@ -50,7 +49,7 @@ object day22 {
   def part1(input: List[String]): Long = {
     val stack = parseInput(input).fall()
 
-    stack.bricks.count{ b =>
+    stack.bricks.par.count{ b =>
       !Stack(stack.bricks - b).wouldFall
     }
   }

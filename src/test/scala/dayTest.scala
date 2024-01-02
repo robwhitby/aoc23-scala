@@ -139,7 +139,8 @@ class dayTest extends AnyFunSuite {
   def time[T](block: => T): T = {
     val t = System.currentTimeMillis()
     val b = block
-    println(System.currentTimeMillis() - t + "ms")
+    val d = System.currentTimeMillis() - t
+    if (d < 1000) println(d + "ms") else println(d/1000 + "s")
     b
   }
 
