@@ -266,4 +266,9 @@ class dayTest extends AnyFunSuite {
     assert(time{day22.part1(open("day22ex.txt"))} == 5)
     println(time{day22.part1(open("day22.txt"))})
   }
+
+  test("22.2") {
+    assert(time{day22.part2(open("day22ex.txt"))} == 7)
+    println(time{day22.part2(open("day22.txt"))})
+  }
 }
