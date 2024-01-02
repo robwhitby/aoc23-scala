@@ -11,7 +11,7 @@ object day22 {
     def moveDown(): Brick = Brick(a.copy(z = a.z-1), b.copy(z = b.z-1), label)
   }
 
-  case class Stack(bricks: Set[Brick]) {
+  case class Stack(bricks: Set[Brick] = Set.empty) {
     def spaceFor(brick: Brick): Boolean = !bricks.exists(b => b.points.exists(brick.points.contains))
 
     def moveBrick(brick: Brick): (Stack, Boolean) = {
@@ -31,7 +31,9 @@ object day22 {
         if (changed) fallBrick(newStack, brick.moveDown())
         else stack
       }
-      bricks.toSeq.sortBy(_.a.z).foldLeft(Stack(Set.empty))(fallBrick)
+      bricks.toSeq.sortBy(_.a.z).foldLeft(Stack()){
+        (s,b) => fallBrick(Stack(s.bricks + b), b)
+      }
     }
 
     def wouldFall: Boolean = bricks.exists(moveBrick(_)._2)
@@ -48,7 +50,6 @@ object day22 {
 
   def part1(input: List[String]): Long = {
     val stack = parseInput(input).fall()
-
     stack.bricks.par.count{ b =>
       !Stack(stack.bricks - b).wouldFall
     }
