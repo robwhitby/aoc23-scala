@@ -1,11 +1,12 @@
 import scala.annotation.tailrec
 
 object day20 {
-
-  abstract sealed class PulseType
-  case object Low extends PulseType
-  case object High extends PulseType
-  case object Off extends PulseType
+  
+  enum PulseType {
+    case Low, High, Off
+  }
+  
+  import PulseType.*
 
   case class Pulse(src: String, pulseType: PulseType, target: String)
 
