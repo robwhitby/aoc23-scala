@@ -45,7 +45,7 @@ object day22 {
 
     @tailrec
     final def countFallers(without: Set[Brick], count: Long = 0): Long =
-      val wouldFall = wouldFallWithout(without)
+      val wouldFall = wouldFallWithoutCached(without)
       if (wouldFall.isEmpty) count
       else countFallers(wouldFall, count + wouldFall.size)
   }
