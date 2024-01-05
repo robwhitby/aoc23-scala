@@ -14,19 +14,21 @@ object day07 {
     }
 
     def compare(that: Hand): Int = {
-      val byTyp = that.typ.compareTo(this.typ)
-      if (byTyp != 0) byTyp else this.original.compareTo(that.original)
+      val byTyp = that.typ.compareTo(typ)
+      if (byTyp != 0) byTyp else original.compareTo(that.original)
     }
 
     def best(): Hand = {
-      "23456789acde".map { c => this.copy(this.cards.replace('1', c)) }.max
+      "23456789acde".map { c => copy(cards.replace('1', c)) }.max
     }
   }
+
+
 
   case object Hand {
     def from(s: String, jokers: Boolean = false): Hand = {
       val fields = s.split(' ')
-      val j = if (jokers) '1' else 'b'
+      val j = if jokers then '1' else 'b'
       val cards = fields(0).replace('T', 'a').replace('J', j).replace('Q', 'c').replace('K', 'd').replace('A', 'e')
       Hand(cards, fields(1).toInt, cards).best()
     }
