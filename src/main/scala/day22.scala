@@ -1,4 +1,5 @@
 import scala.annotation.tailrec
+import scala.collection.parallel.CollectionConverters.*
 
 object day22 {
 
@@ -18,7 +19,7 @@ object day22 {
       if (brick.a.z > 1 && below.isEmpty) {
         fallBrick(brick.down())
       }
-      else Stack(bricks.appended(brick).sortBy(_.a.z), graph.updated(brick.label, below))
+      else Stack(bricks.appended(brick), graph.updated(brick.label, below))
 
     def fall(): Stack = bricks.foldLeft(Stack()){ (s,b) => s.fallBrick(b) }
 
@@ -31,10 +32,10 @@ object day22 {
       .filter { graph(_).subsetOf(without) }
 
     @tailrec
-    final def countFallers(without: Set[Char], count: Long = 0): Long =
+    final def countFallers(without: Set[Char]): Long =
       val wouldFall = wouldFallWithout(without)
-      if (wouldFall.isEmpty) count
-      else countFallers(wouldFall, count + wouldFall.size)
+      if (wouldFall.subsetOf(without)) wouldFall.size
+      else countFallers(without ++ wouldFall)
   }
 
   def parseInput(input: List[String]): Stack =
@@ -57,7 +58,7 @@ object day22 {
       .graph
       .keys
       .toSeq
+      .par
       .map(k => stack.countFallers(Set(k)))
       .sum
-
 }

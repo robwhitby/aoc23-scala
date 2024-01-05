@@ -2,6 +2,7 @@ import day11.{Point, Universe}
 import day06.Race
 import org.scalatest.funsuite.AnyFunSuite
 
+import java.io.File
 import scala.io.Source
 
 class dayTest extends AnyFunSuite {
