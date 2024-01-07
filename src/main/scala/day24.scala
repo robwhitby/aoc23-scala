@@ -1,11 +1,11 @@
 object day24:
 
-  case class Point(x: Double, y: Double, z: Double)
+  case class Point(x: BigDecimal, y: BigDecimal, z: BigDecimal)
 
   case class Line(p: Point, v: Point)
 
   def parseInput(input: List[String]) = input.map { line =>
-    val c = line.split(",@".toCharArray).map(_.trim.toDouble)
+    val c = line.split(",@".toCharArray).map(_.trim).map(BigDecimal(_))
     Line(Point(c(0), c(1), c(2)), Point(c(3), c(4), c(5)))
   }
 
@@ -31,7 +31,7 @@ object day24:
   def inFuture(l: Line, p: Point) =
     Seq(p.x - l.p.x, l.v.x).count(_ > 0) != 1 && Seq(p.y - l.p.y, l.v.y).count(_ > 0) != 1
 
-  def part1(input: List[String], bounds: (Double, Double)): Int =
+  def part1(input: List[String], bounds: (BigDecimal, BigDecimal)): Int =
     def inBounds(p: Point) =
       p.x >= bounds._1 && p.x <= bounds._2 && p.y >= bounds._1 && p.y <= bounds._2
 
