@@ -39,3 +39,10 @@ object day24:
       .combinations(2)
       .flatMap{ case Seq(a,b) => intersection(a,b) }
       .count(inBounds)
+
+  def part2(input: List[String]): Int =
+    // rock = (a,b)
+    // position where (a,b) intersects (p,v)
+    // a + tb = p + tv
+    // a = p + t(v-b)
+    ???
