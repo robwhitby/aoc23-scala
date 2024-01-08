@@ -49,4 +49,4 @@ object day25:
   def part1(input: List[String]): Int =
     val matrix = toMatrix(parseInput(input))
     val cut = minCut(matrix)
-    cut._2.size * (matrix.length - cut._2.length)
+    cut._2.length * (matrix.length - cut._2.length)
