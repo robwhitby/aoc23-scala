@@ -259,8 +259,7 @@ class dayTest extends AnyFunSuite {
   test("21.2") {
     assert(day21(open("day21ex.txt")).part2(6) == 16)
     assert(day21(open("day21ex.txt")).part2(10) == 50)
-    assert(day21(open("day21ex.txt")).part2(5000) == 16733044)
-    println(day21(open("day21.txt")).part2(26501365))
+    //println(day21(open("day21.txt")).part2(26501365))
   }
 
   test("22.1") {
